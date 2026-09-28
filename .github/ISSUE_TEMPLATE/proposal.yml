@@ -1,0 +1,29 @@
+name: 💡 Projekt-Proposal
+description: Schlage ein neues Projekt vor
+labels: ["proposal"]
+body:
+  - type: input
+    attributes:
+      label: Projektname
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Worum geht's?
+      description: Kurz und klar, was soll gebaut werden?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Warum ist das cool?
+  - type: textarea
+    attributes:
+      label: Vorgeschlagener Tech-Stack
+  - type: textarea
+    attributes:
+      label: Erster kleiner Meilenstein
+  - type: checkboxes
+    attributes:
+      label: Bist du dabei?
+      options:
+        - label: Ich würde selbst mitbauen

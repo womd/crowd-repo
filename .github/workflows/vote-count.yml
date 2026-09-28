@@ -1,0 +1,31 @@
+name: Vote Count
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
+permissions:
+  issues: write
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner, repo: context.repo.repo,
+              labels: 'voting', state: 'open'
+            });
+            for (const i of issues) {
+              const r = await github.rest.reactions.listForIssue({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: i.number, per_page: 100
+              });
+              const c = k => r.data.filter(x => x.content === k).length;
+              const up = c('+1'), down = c('-1'), builders = c('hooray');
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: i.number,
+                body: `📊 Zwischenstand: 👍 ${up} | 👎 ${down} | 🎉 Mitbauer ${builders}`
+              });
+            }
